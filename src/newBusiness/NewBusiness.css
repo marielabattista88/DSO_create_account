@@ -163,4 +163,13 @@
 .nb__notice { display: flex; gap: 8px; margin-top: 16px; padding: 8px 12px; border-radius: 8px; background: #f3f4f5; font-size: 11px; line-height: 16px; color: #52606d; }
 .nb__notice svg { flex-shrink: 0; margin-top: 2px; }
 .nb__notice strong { display: block; color: #222b2f; font-weight: 600; }
-.nb__stack div:has(> input[disabled]) > button { display: none; }
+.nb__stack button[aria-label="Clear"]:disabled { display: none; }
+
+/* Assigned service locations (Figma 3589:179224) */
+.nb__assign-head { min-height: 32px; }
+.nb__locs--assigned { margin-top: 16px; max-height: 448px; overflow-y: auto; padding-right: 0; }
+.nb__assigned { box-sizing: border-box; min-height: 68px; padding: 0 16px; border: 1px solid #eef0f1; background: #f7f7f7; }
+.nb__assigned strong { font-size: 14px; line-height: 20px; font-weight: 600; }
+.nb__assigned small { display: block; margin-top: 2px; font-size: 10px; line-height: 14px; }
+.nb__trash { width: 24px; height: 24px; display: grid; place-items: center; border: 0; background: none; color: #00669e; cursor: pointer; transition: color 120ms ease; }
+.nb__trash:hover { color: #0087cd; }

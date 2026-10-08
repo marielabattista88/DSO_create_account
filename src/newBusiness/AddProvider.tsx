@@ -138,6 +138,7 @@ export function AddProvider() {
   const [assigned, setAssigned] = useState<string[]>(existing?.locations ?? [])
   const [picking, setPicking] = useState(false)
   const [locError, setLocError] = useState(false)
+  const [added, setAdded] = useState(false)
   const [found, setFound] = useState<Registry | null>(
     existing ? { firstName: existing.firstName, lastName: existing.lastName, credentials: existing.credentials, specialty: existing.specialty } : null,
   )
@@ -211,18 +212,26 @@ export function AddProvider() {
               <h3 className="nb__section-title" style={{ margin: 0 }}>Assign Service Location(s)</h3>
               <button type="button" className="nb__btn-outline nb__btn-outline--sm" onClick={() => setPicking(true)}>Add Service Location</button>
             </div>
+            {added && chosen.length > 0 && (
+              <div className="nb__banner" role="status">
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#1f8a4c" /><path d="M4.5 8.3l2.3 2.3 4.7-4.7" fill="none" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                Service Location(s) added successfully.
+              </div>
+            )}
             {chosen.length === 0 ? (
               <div className="nb__empty nb__empty--sm">
                 <strong>No Service Locations Assigned</strong>
                 <small>Select one or more service locations you already added.</small>
               </div>
             ) : (
-              <ul className="nb__locs nb__locs--static">
+              <ul className="nb__locs nb__locs--static nb__locs--assigned">
                 {chosen.map((l) => (
                   <li key={l.id}>
                     <div className="nb__assigned">
                       <span><strong>{l.name}</strong><small>{l.address}</small></span>
-                      <button type="button" className="nb__link-btn" onClick={() => setAssigned((s) => s.filter((x) => x !== l.id))}>Remove</button>
+                      <button type="button" className="nb__trash" aria-label={`Remove ${l.name}`} onClick={() => setAssigned((s) => s.filter((x) => x !== l.id))}>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2.5 4h11M6 4V2.5h4V4M3.8 4l.6 9.5h7.2l.6-9.5M6.5 6.5v5M9.5 6.5v5" /></svg>
+                      </button>
                     </div>
                   </li>
                 ))}
@@ -240,7 +249,7 @@ export function AddProvider() {
 
       {picking && (
         <LocationsModal all={available} initial={assigned} onClose={() => setPicking(false)}
-          onAdd={(ids) => { setAssigned(ids); setLocError(false); setPicking(false) }} />
+          onAdd={(ids) => { setAssigned(ids); setAdded(ids.length > 0); setLocError(false); setPicking(false) }} />
       )}
     </NewBusinessLayout>
   )
