@@ -8,7 +8,8 @@ import { OrganizationInfo } from './enrollment/steps/OrganizationInfo'
 import { OrganizationFound } from './enrollment/steps/OrganizationFound'
 import { BillingLocations } from './enrollment/steps/BillingLocations'
 import { Dashboard } from './portal/Dashboard'
-import { MyBusinesses, UsersAndRoles } from './portal/MyBusinesses'
+import { MyBusinesses } from './portal/MyBusinesses'
+import { UsersAndRoles } from './portal/UsersAndRoles'
 import { AccountReady } from './enrollment/steps/AccountReady'
 
 export default function App() {

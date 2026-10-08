@@ -32,3 +32,12 @@ export function AddBusinessButton() {
     </button>
   )
 }
+
+export function AddUserButton({ onClick }: { onClick?: () => void }) {
+  return (
+    <button type="button" className="phdr__btn" onClick={onClick}>
+      <span aria-hidden="true" style={{ fontSize: 20, lineHeight: 1 }}>+</span>
+      Add User
+    </button>
+  )
+}

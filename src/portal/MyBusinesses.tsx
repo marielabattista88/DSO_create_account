@@ -59,7 +59,7 @@ const ChevronDown = ({ open }: { open: boolean }) => (
   </svg>
 )
 
-function StatusDropdown({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+export function StatusDropdown({ value, onChange, options = STATUSES, label = 'Status', allLabel = 'All statuses' }: { value: string; onChange: (v: string) => void; options?: string[]; label?: string; allLabel?: string }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -80,12 +80,12 @@ function StatusDropdown({ value, onChange }: { value: string; onChange: (v: stri
         onClick={() => setOpen((o) => !o)}
         onKeyDown={(e) => { if (e.key === 'Escape') setOpen(false) }}
       >
-        <span>{value || 'Status'}</span>
+        <span>{value || label}</span>
         <ChevronDown open={open} />
       </button>
       {open && (
         <ul className="biz__dd-menu" role="listbox">
-          {['', ...STATUSES].map((s) => (
+          {['', ...options].map((s) => (
             <li
               key={s || 'all'}
               role="option"
@@ -93,7 +93,7 @@ function StatusDropdown({ value, onChange }: { value: string; onChange: (v: stri
               className={s === value ? 'is-selected' : undefined}
               onClick={() => { onChange(s); setOpen(false) }}
             >
-              {s || 'All statuses'}
+              {s || allLabel}
             </li>
           ))}
         </ul>
@@ -107,7 +107,7 @@ const ROW_HEIGHT = 58
 const CHROME_HEIGHT = 397
 const fitRows = () => Math.max(3, Math.floor((window.innerHeight - CHROME_HEIGHT) / ROW_HEIGHT))
 
-function pageList(page: number, pages: number): (number | '…')[] {
+export function pageList(page: number, pages: number): (number | '…')[] {
   if (pages <= 5) return Array.from({ length: pages }, (_, i) => i + 1)
   const start = Math.min(Math.max(page - 1, 1), pages - 3)
   const mid = [start, start + 1, start + 2].filter((n) => n > 1 && n < pages)
@@ -227,15 +227,6 @@ export function MyBusinesses() {
           </div>
         </section>
       </main>
-    </div>
-  )
-}
-
-export function UsersAndRoles() {
-  return (
-    <div className="biz">
-      <PortalNav />
-      <PageHeader breadcrumb="User & Roles" title="User & Roles" />
     </div>
   )
 }
