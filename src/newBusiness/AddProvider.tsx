@@ -24,7 +24,7 @@ const DEMO: Loc[] = [
   ['2100 N Collins Blvd, Richardson, TX 75080', 'Sunshine Dental Group · TIN 12-3456789'],
   ['350 S Grand Ave, Los Angeles, CA 90071', 'Gulf Coast Family Dentistry · TIN 98-7654321'],
   ['8700 W Bryn Mawr Ave, Chicago, IL 60631', 'Gulf Coast Family Dentistry · TIN 98-7654321'],
-].map(([address, business], i) => ({ id: `demo-${i}`, name: 'Bright Smile Dental', address, business }))
+].map(([address, business], i) => ({ id: `demo-${i}`, name: 'Bright Smile Dental NY - 1235894', address, business }))
 
 function useAvailableLocations(): Loc[] {
   return useMemo(() => {

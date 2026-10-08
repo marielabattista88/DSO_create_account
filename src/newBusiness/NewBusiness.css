@@ -180,3 +180,7 @@
 .nb__assigned strong { font-size: 14px; line-height: 18px; font-weight: 600; letter-spacing: 0.3px; color: #222b2f; }
 .nb__assigned small { margin: 0; font-size: 12px; line-height: 16px; letter-spacing: 0.3px; color: #72777a; }
 .nb__trash { width: 28px; height: 28px; border-radius: 6px; }
+
+.nb__locs .nb__trash { width: 28px; height: 28px; flex: none; padding: 0; border: 0; border-radius: 6px; background: none; display: grid; place-items: center; color: #00669e; }
+.nb__locs .nb__trash:hover { background: none; color: #0087cd; }
+.nb__assigned > span { flex: 1; min-width: 0; }
