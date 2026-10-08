@@ -1,0 +1,159 @@
+/**
+ * Anillo de estado — reproducción de las animaciones Lottie de CDH
+ * (loader-success.json / loader-error.json) en SVG + CSS.
+ *
+ * Todos los números salen de esos archivos, no de la vista: a 60 fps,
+ *   sweep   frames 0-96   = 1.600 s   el anillo se dibuja
+ *   morph   frames 96-129 = 0.550 s   el anillo colapsa en disco y cambia de color
+ *   check   frames 114-138 = 0.400 s  con 0.300 s de retraso desde el morph
+ *   shake   frames 118-148 = 0.500 s  sólo en el error
+ * y los colores, convertidos de los flotantes del JSON:
+ *   anillo #00497A · éxito #09B744 · error #E13232   → los tres son tokens
+ *   pista #E5EDF2 · disco éxito #ECF3ED · disco error #FFF0F0  → sin token
+ */
+
+.ndp-status {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* La pista y el disco de acento son los únicos colores sin token en la paleta:
+   vienen del archivo de la animación, así que se declaran acá una sola vez. */
+.ndp-status {
+  --ndp-status-track: #e5edf2;
+  --ndp-status-disc-success: #ecf3ed;
+  --ndp-status-disc-error: #fff0f0;
+}
+
+.ndp-status__track { stroke: var(--ndp-status-track); }
+.ndp-status__ring { stroke: var(--nb-navy); }
+
+/* ---------------------------------------------------------------- pending -- */
+/* dasharray es la circunferencia de r=34; el trim de Lottie va 0→100 con esta
+   misma curva. En espera se repite, porque no sabemos cuánto va a tardar. */
+.ndp-status__ring {
+  stroke-dasharray: 213.628;
+  stroke-dashoffset: 213.628;
+}
+
+.ndp-status[data-status='pending'] .ndp-status__ring {
+  animation: ndp-sweep 1.6s cubic-bezier(0.35, 0.15, 0.25, 1) infinite;
+}
+
+@keyframes ndp-sweep {
+  from { stroke-dashoffset: 213.628; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* ------------------------------------------------------------ resolución -- */
+/* El anillo arranca completo: si el estado cambia a mitad del barrido habría un
+   salto, y colapsar de inmediato lo tapa. Lottie hace lo mismo. */
+.ndp-status[data-status='success'] .ndp-status__ring,
+.ndp-status[data-status='error'] .ndp-status__ring {
+  stroke-dashoffset: 0;
+  animation: ndp-morph 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.ndp-status[data-status='success'] .ndp-status__ring { --ndp-status-ink: var(--nb-success); }
+.ndp-status[data-status='error'] .ndp-status__ring { --ndp-status-ink: var(--nb-error); }
+
+/* r y stroke-width se animan como propiedades CSS de SVG. Un anillo de r=13 con
+   30 de trazo no deja hueco: eso es el "disco" del final. */
+@keyframes ndp-morph {
+  from { r: 34px; stroke-width: 6px; stroke: var(--nb-navy); }
+  to { r: 13px; stroke-width: 30px; stroke: var(--ndp-status-ink); }
+}
+
+.ndp-status[data-status='success'] .ndp-status__track,
+.ndp-status[data-status='error'] .ndp-status__track {
+  animation: ndp-fade-out 0.27s ease-out forwards;
+}
+
+@keyframes ndp-fade-out {
+  to { opacity: 0; }
+}
+
+.ndp-status__disc { opacity: 0; transform-box: view-box; transform-origin: 50px 50px; }
+.ndp-status[data-status='success'] .ndp-status__disc { fill: var(--ndp-status-disc-success); }
+.ndp-status[data-status='error'] .ndp-status__disc { fill: var(--ndp-status-disc-error); }
+
+.ndp-status[data-status='success'] .ndp-status__disc,
+.ndp-status[data-status='error'] .ndp-status__disc {
+  animation: ndp-disc 0.55s cubic-bezier(0.2, 0, 0.4, 1) forwards;
+}
+
+@keyframes ndp-disc {
+  from { opacity: 0; transform: scale(0.6); }
+  60% { opacity: 1; transform: scale(1.06); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* El check lleva pathLength=1, así el dash va en 0..1 y no depende del largo. */
+.ndp-status__check { stroke-dasharray: 1; stroke-dashoffset: 1; }
+
+.ndp-status[data-status='success'] .ndp-status__check {
+  animation: ndp-draw 0.4s cubic-bezier(0.22, 0.9, 0.3, 1) 0.3s forwards;
+}
+
+@keyframes ndp-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Las barras de la cruz crecen desde el centro, como el trim de Lottie que abre
+   del 50 % hacia los dos extremos. Las dos pasan por (50,50). */
+.ndp-status__bar {
+  transform-box: view-box;
+  transform-origin: 50px 50px;
+  transform: scale(0);
+}
+
+.ndp-status[data-status='error'] .ndp-status__bar {
+  animation: ndp-bar 0.3s cubic-bezier(0.22, 0.9, 0.3, 1) forwards;
+}
+
+.ndp-status[data-status='error'] .ndp-status__bar:nth-of-type(1) { animation-delay: 0.3s; }
+.ndp-status[data-status='error'] .ndp-status__bar:nth-of-type(2) { animation-delay: 0.4s; }
+
+@keyframes ndp-bar {
+  to { transform: scale(1); }
+}
+
+/* El pulso de escala y, sólo en el error, la sacudida horizontal. */
+.ndp-status[data-status='success'] .ndp-status__ctrl,
+.ndp-status[data-status='error'] .ndp-status__ctrl {
+  transform-box: view-box;
+  transform-origin: 50px 50px;
+  animation: ndp-pulse 0.55s cubic-bezier(0.2, 0, 0.4, 1) forwards;
+}
+
+@keyframes ndp-pulse {
+  0% { transform: scale(1); }
+  27% { transform: scale(1.07); }
+  100% { transform: scale(1); }
+}
+
+.ndp-status[data-status='error'] .ndp-status__shake {
+  animation: ndp-shake 0.5s ease-in-out 0.37s;
+}
+
+@keyframes ndp-shake {
+  0%, 100% { transform: translateX(0); }
+  23% { transform: translateX(1.6px); }
+  46% { transform: translateX(-1.4px); }
+  70% { transform: translateX(1px); }
+  86% { transform: translateX(-0.6px); }
+}
+
+/* Respeta la preferencia del sistema: sin movimiento, el estado final igual se
+   ve, sólo aparece sin transición. */
+@media (prefers-reduced-motion: reduce) {
+  .ndp-status *,
+  .ndp-status {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+  }
+  .ndp-status[data-status='pending'] .ndp-status__ring {
+    animation: ndp-sweep 1.6s linear infinite !important;
+    animation-duration: 1.6s !important;
+  }
+}

@@ -1,0 +1,242 @@
+/**
+ * Field reskin: nb-flexpay-ui behaviour, nb-adaptive-design-system looks.
+ *
+ * Keeps every flexpay field exactly as it is functionally — react-hook-form
+ * wiring, validation, clear buttons, chevrons, calendar and password icons — and
+ * restyles only the four visual states the design asked for: default, hover,
+ * selected (focus) and typed.
+ *
+ * Deliberately NOT touched:
+ *   · error and disabled states — flexpay keeps its own treatment
+ *   · icons of any kind
+ *   · labels and helper text
+ *
+ * Values are read from nb-adaptive-design-system's own field components
+ * (src/components/FormField/FormField.tsx and SelectField/SelectField.tsx) and
+ * its tokens.css, not approximated:
+ *   h-11 → 44px · rounded-lg → 8px · body4 → 14px/18px/0.3px
+ *   border greyscale-200 #E7E8E9 · hover greyscale-300 #CCCCCC
+ *   focus border primary #00497A + ring-2 primary/10
+ *   placeholder greyscale-300 #CCCCCC · text primary-woodsmoke #222B2F
+ *
+ * Notes on the selectors:
+ *   flexpay draws the border on the *wrapper*, not the input, so the wrapper is
+ *   matched with :has(> input). Error is excluded by class rather than by
+ *   overriding-then-restoring, so flexpay's error border keeps winning.
+ *   flexpay has no distinct "typed" style — typed is default without focus — so
+ *   the default rule covers it.
+ */
+
+:root {
+  --ndp-field-border: #e7e8e9;
+  --ndp-field-border-hover: #cccccc;
+  --ndp-field-border-focus: #00497a;
+  --ndp-field-ring: rgba(0, 73, 122, 0.1);
+  --ndp-field-placeholder: #cccccc;
+  --ndp-field-text: #222b2f;
+  --ndp-field-radius: 8px;
+  --ndp-field-transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+/* ---------- Text inputs (FieldInput, FieldTextArea, masked inputs) ---------- */
+
+div:has(> .nb-pos-lib--input-custom) {
+  /* Pinned to adaptive's h-11. Without this the field grows 44 → 48px as soon as
+     the user types, because flexpay injects a taller clear button into the same
+     row. Applied to error too: the jump is a sizing bug, not a state style. */
+  height: 44px;
+  max-height: 44px;
+}
+
+div:has(> .nb-pos-lib--input-custom):not(.border-messaging-error) {
+  border-color: var(--ndp-field-border);
+  border-radius: var(--ndp-field-radius);
+  background-color: #ffffff;
+  transition: var(--ndp-field-transition);
+}
+
+div:has(> .nb-pos-lib--input-custom):not(.border-messaging-error):hover {
+  border-color: var(--ndp-field-border-hover);
+}
+
+/* Selected / focused. focus-within is what flexpay already keys on, so the
+   border colour agrees with the library; the ring is adaptive's addition. */
+div:has(> .nb-pos-lib--input-custom):not(.border-messaging-error):focus-within {
+  border-color: var(--ndp-field-border-focus);
+  box-shadow: 0 0 0 2px var(--ndp-field-ring);
+}
+
+/* body-1 (16px/20px) → body4 (14px/18px). This also brings the field from 46px
+   to adaptive's 44px on its own, since height comes from padding + line-height. */
+.nb-pos-lib--input-custom {
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.3px;
+  color: var(--ndp-field-text);
+}
+
+.nb-pos-lib--input-custom::placeholder {
+  color: var(--ndp-field-placeholder);
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.3px;
+}
+
+/* ---------- Verification code boxes (DigitInput) ---------- */
+
+/* DigitInput was the odd one out: 1.5px borders (rendered 2px) in
+   secondary-columbia #DEE8EC instead of 1px grey200, so the OTP screen did not
+   match any other field. Keyed on the default-state class, which flexpay swaps
+   out for the error treatment — so error styling is left untouched by
+   construction rather than by a :not() guard.
+   No !important needed: `input.border-secondary-columbia` (0-1-1) already
+   outweighs the library's single utility class (0-1-0). */
+input.border-secondary-columbia {
+  border-width: 1px;
+  border-color: var(--ndp-field-border);
+  transition: var(--ndp-field-transition);
+}
+
+input.border-secondary-columbia:hover {
+  border-width: 1px;
+  border-color: var(--ndp-field-border-hover);
+}
+
+/* border-width is repeated on the state rules on purpose: the library's
+   `border-[1.5px]` (1.5px, which Chrome rounds up to 2px) otherwise wins on the
+   focused box, leaving one of the six code boxes visibly thicker. */
+input.border-secondary-columbia:focus,
+input.border-secondary-columbia:focus-visible,
+input.border-secondary-columbia:focus:hover {
+  border-width: 1px;
+  border-color: var(--ndp-field-border-focus);
+  box-shadow: 0 0 0 2px var(--ndp-field-ring);
+  outline: none;
+}
+
+/* Success — the six boxes go green when the code is accepted, which is the only
+   confirmation Verify Your Email gives before it moves on.
+ *
+ * The rules above turn out to catch it. The docblock's claim that keying on
+ * `border-secondary-columbia` leaves the library's state styling alone holds for
+ * error only: flexpay drops that class for error but keeps it for success.
+ *
+ * And on success the green never reaches the DOM at all. flexpay composes the box
+ * className through tailwind-merge, which treats `border-messaging-success` and
+ * `border-secondary-columbia` as the same border-colour group and keeps the last
+ * one — columbia. The rendered class list is
+ *   border-[1.5px] text-messaging-success border-secondary-columbia
+ * with no border colour of its own, so the rules above painted it grey, or navy on
+ * whichever box still held focus.
+ *
+ * Hooked on `text-messaging-success` for that reason: it is the one success class
+ * that survives the merge, and flexpay sets it exactly when the status is success.
+ *
+ * Focus and hover are included because the sixth box still holds focus at the
+ * moment the code is accepted. Width stays 1px so the boxes do not thicken as they
+ * turn. */
+input.border-secondary-columbia.text-messaging-success,
+input.border-secondary-columbia.text-messaging-success:hover,
+input.border-secondary-columbia.text-messaging-success:focus,
+input.border-secondary-columbia.text-messaging-success:focus-visible,
+input.border-secondary-columbia.text-messaging-success:focus:hover {
+  border-width: 1px;
+  border-color: var(--color-messaging-success);
+  box-shadow: none;
+  outline: none;
+}
+
+/* ---------- Selects (FieldSelect) ---------- */
+
+/* !important is required here, not sloppiness: react-select styles the control
+   through emotion, which injects a same-specificity class into <head> at runtime
+   — after this stylesheet — so source order hands it the win. The library sets
+   react-select's `styles` prop itself, so the supported override path is closed
+   too. Only the four state properties are forced. */
+.selectFlexPay__control {
+  border-color: var(--ndp-field-border) !important;
+  border-radius: var(--ndp-field-radius) !important;
+  background-color: #ffffff !important;
+  /* height, not just min-height: react-select's internal padding made the control
+     44.578px against the text inputs' 44px. Same border, same colour, but a
+     different box — so the two fields' lines sat at different heights and did not
+     line up when placed side by side in an address row. */
+  height: 44px !important;
+  min-height: 44px !important;
+  transition: var(--ndp-field-transition);
+  box-shadow: none !important;
+}
+
+.selectFlexPay__control:hover {
+  border-color: var(--ndp-field-border-hover) !important;
+}
+
+/* The :hover selector above is specificity 0-2-0 while a bare state class is
+   0-1-0, so hover would beat focus even though it comes first. The hovered
+   variants are listed explicitly to match its weight. */
+.selectFlexPay__control--is-focused,
+.selectFlexPay__control--menu-is-open,
+.selectFlexPay__control--is-focused:hover,
+.selectFlexPay__control--menu-is-open:hover {
+  border-color: var(--ndp-field-border-focus) !important;
+  box-shadow: 0 0 0 2px var(--ndp-field-ring) !important;
+}
+
+/* Error. The text-input rules above carve error out with
+   `:not(.border-messaging-error)` and let flexpay's own treatment win; selects had
+   no equivalent, so an invalid select kept a grey border while its message went
+   red — visible on Tell Us About Your Practice, where submitting an empty form
+   reddens every field except State.
+ *
+ * react-select exposes no error class to hang this on: FieldSelect expresses the
+ * state through the `styles` prop it hands emotion, and the !important rules above
+ * outrank that. What it does render is an errored TextHelper as a sibling of the
+ * control, so that is what is matched — which means every FieldSelect in the app
+ * is covered without any screen passing a flag.
+ *
+ * The focused variants are listed so error beats focus, the same way it does on
+ * text inputs. No focus ring on an errored select, for the same reason: flexpay's
+ * error style does not draw one either. */
+div:has(> span.text-messaging-error) .selectFlexPay__control,
+div:has(> span.text-messaging-error) .selectFlexPay__control:hover,
+div:has(> span.text-messaging-error) .selectFlexPay__control--is-focused,
+div:has(> span.text-messaging-error) .selectFlexPay__control--menu-is-open,
+div:has(> span.text-messaging-error) .selectFlexPay__control--is-focused:hover,
+div:has(> span.text-messaging-error) .selectFlexPay__control--menu-is-open:hover {
+  border-color: var(--color-messaging-error) !important;
+  border-width: 1.5px !important;
+  box-shadow: none !important;
+}
+
+.selectFlexPay__single-value,
+.selectFlexPay__input-container,
+.selectFlexPay__placeholder {
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.3px;
+}
+
+.selectFlexPay__single-value {
+  color: var(--ndp-field-text);
+}
+
+.selectFlexPay__placeholder {
+  color: var(--ndp-field-placeholder);
+}
+
+/* Menu surface and option hover, matching adaptive's SelectField dropdown:
+   white, rounded-lg, greyscale-100 border, option hover greyscale-50. */
+.selectFlexPay__menu {
+  border-radius: var(--ndp-field-radius);
+  border: 1px solid #eef0f1;
+  overflow: hidden;
+}
+
+.selectFlexPay__option {
+  transition: background-color 120ms ease;
+}
+
+.selectFlexPay__option:hover,
+.selectFlexPay__option--is-focused {
+  background-color: #f8f8f8;
+}

@@ -1,9 +1,276 @@
+/* Tailwind v4 for the app's own utility classes. Imported directly rather than
+   through nb-adaptive-design-system, so the default design system (nb-flexpay-ui)
+   owns the global styling. See CLAUDE.md. */
+@import "tailwindcss";
+
+/* Proxima Nova weight remap.
+ *
+ * nb-flexpay-ui declares @font-face for Proxima Nova but maps weights one step
+ * light: 700 loads ProximaNova-Semibold and 600 loads ProximaNova-Medium (the
+ * same file as 500). The Figma library specifies Bold 700 for H1/H2 and Semibold
+ * 600 for Body2/Body5/Sub4, so every heading rendered lighter than designed.
+ *
+ * ProximaNova-Bold.woff2 does exist on the CDN — the library just never
+ * references it. These two rules win because index.css is imported after the
+ * library stylesheet. See docs/nb-flexpay-ui-findings.md. */
+@font-face {
+  font-family: "Proxima Nova";
+  src: url(https://static.nationsbenefits.com/nb-container/fonts/ProximaNova/ProximaNova-Semibold.woff2)
+    format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Proxima Nova";
+  src: url(https://static.nationsbenefits.com/nb-container/fonts/ProximaNova/ProximaNova-Bold.woff2)
+    format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* NationsBenefits design tokens, read from the Figma library
+   (Claims-Portals-HI-FI). These are the source of truth for the prototype's
+   own layout chrome; component internals come from nb-flexpay-ui. */
+:root {
+  --nb-navy: #00497a;
+  --nb-navy-dark: #003a62;
+  --nb-woodsmoke: #222b2f;
+  --nb-coral: #f25d4a;
+  --nb-ghost-white: #fcfeff;
+  --nb-grey-200: #e7e8e9;
+  /* Matches nb-flexpay-ui's own --color-nb-grey-300, read from its stylesheet
+     rather than eyeballed. */
+  --nb-grey-300: #cccccc;
+  --nb-grey-500: #b1b1b1;
+  --nb-grey-700: #72777a;
+  /* Greyscale/Grey800 — la etiqueta de cada fila de review. Igual que grey300,
+     el valor sale de --color-nb-grey-800 de nb-flexpay-ui, no de pipeta. */
+  --nb-grey-800: #5f6567;
+  --nb-grey-900: #3b4347;
+  /* Primary/DarkMode — el título de las tarjetas de review. Es más negro que
+     woodsmoke, que es el color del texto en general. */
+  --nb-dark-mode: #0f0f0f;
+
+  /* Messaging/Neutral and its Tag Colors/Secondary Blue halo — the pair the
+     status icon uses for informational outcomes. */
+  --nb-neutral: #1a88b4;
+  --nb-neutral-subtle: #e8f3f7;
+  --nb-success: #09b744;
+  --nb-error: #e13232;
+  --nb-night: #002843;
+  /* Secondary/LightBlue and Secondary/SkyBlue — the rail surface and its
+     selected row in the agreement reader. */
+  --nb-light-blue: #f8fafb;
+  --nb-sky-blue: #eef4f6;
+
+  --nb-shadow-small: 0 2px 8px 0 #0000000f;
+  --nb-shadow-large: 0 12px 14px 0 #2d2d2e26;
+
+  --nb-radius: 8px;
+  --nb-radius-card: 12px;
+  /* Las tarjetas de review ("Profile Modules") van a 16, no a los 12 del resto
+     de las superficies. Token aparte en vez de subir --nb-radius-card, que lo
+     usan las tarjetas de las pantallas de cuenta. */
+  --nb-radius-module: 16px;
+
+  font-family: "Proxima Nova", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--nb-woodsmoke);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
+  margin: 0;
+  background: var(--nb-ghost-white);
+}
+
+/* Heading leading.
+ *
+ * nb-flexpay-ui's heading classes use Tailwind's leading-normal (1.5), while
+ * nb-adaptive-design-system sets h1–h3 to 1.1 at identical sizes and tracking.
+ * At 28px that is 42px vs 30.8px per line, and 1.5 makes a two-line title read
+ * as two separate sentences. Headings follow adaptive; the font size, weight and
+ * letter-spacing still come from the library's own classes. */
+.heading-1,
+.heading-2,
+.heading-3,
+.heading-4,
+.heading-5 {
+  line-height: 1.1;
+}
+
+/* nb-flexpay-ui's Select renders `.selectFlexPay__control` at a fixed 420px, so
+   it overflows any container narrower than that — in a 3-column address row the
+   State select covered the ZIP field entirely. Constraining it to its parent is
+   required for selects to be usable in multi-column layouts. This override only
+   lands because index.css is imported after the library stylesheet. */
+.selectFlexPay__control {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* BannerAlert / Alert — tighten the title-to-text spacing by 2px.
+ *
+ * Requested as a design system change. It cannot be made in nb-flexpay-ui from
+ * this repo (the package is installed from Azure Artifacts, so an edit under
+ * node_modules would be lost on the next install), so it is applied here as a
+ * project-wide override and logged for the library in
+ * docs/nb-flexpay-ui-findings.md.
+ *
+ * The banner renders its title and text as `strong` + `span` inside a flex
+ * column, with no margin or gap between them — the apparent space is purely
+ * line-height. Anchored on `border-l-4`, the banner's left accent bar, so it does
+ * not catch unrelated strong+span pairs. */
+div.border-l-4 div.flex.flex-col > strong + span {
+  margin-top: -2px;
+}
+
+/* Verification code boxes — node 3758:42716 sets a 16px gap and 72 × 80 boxes.
+   DigitInput hardcodes `gap-2` (8px) on its row and sizes the boxes itself, so
+   both come from here. Scoped to .ndp-otp so no other DigitInput is affected.
+
+   72px is a MAX, not a fixed width: six fixed boxes plus five 16px gaps come to
+   512px, which overflows the 456px card interior — and far more on a phone. The
+   boxes flex down to fit the container and only reach the design's 72px when
+   there is room. */
+.ndp-otp .flex.gap-2 {
+  gap: 16px;
+  width: 100%;
+}
+
+.ndp-otp input.border-secondary-columbia {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 72px;
+  height: 80px;
+}
+
+/* Remove the "Select…" placeholder once a select is opened or focused.
+   These selects are searchable, so the placeholder otherwise competes with what
+   the user is typing.
+
+   `display: none`, not `visibility: hidden`: the placeholder sits in the flow next
+   to the search input, so merely hiding it left its box in place and pushed the
+   caret to the middle of the field. Taking it out of the flow puts the caret where
+   typing starts. */
+.selectFlexPay__control--is-focused .selectFlexPay__placeholder,
+.selectFlexPay__control--menu-is-open .selectFlexPay__placeholder {
+  display: none;
+}
+
+/* The input container collapses to its content width, which leaves the caret
+   floating mid-field. Let it fill the row so typing begins at the left edge. */
+.selectFlexPay__control--is-focused .selectFlexPay__input-container,
+.selectFlexPay__control--menu-is-open .selectFlexPay__input-container {
+  flex: 1 1 auto;
   margin: 0;
 }
 
-.page {
-  max-width: 480px;
-  margin: 48px auto;
-  padding: 0 16px;
+/* Dot bounce for AppLoader — the motion the node's three exported SVGs cannot
+   carry, since they are a single frame of it. */
+@keyframes ndp-dot-bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  40% {
+    transform: translateY(-10px);
+    opacity: 0.85;
+  }
+}
+
+/* Change Language list scrollbar — node 3758:42767 ships an explicit 4px rail
+   with a Grey100 track and a Navy thumb, both at radius 8. Scoped to the list so
+   it does not restyle scrollbars elsewhere. */
+.ndp-language-list {
+  scrollbar-width: thin;
+  scrollbar-color: #00497a #eef0f1;
+}
+
+.ndp-language-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ndp-language-list::-webkit-scrollbar-track {
+  background: #eef0f1;
+  border-radius: 8px;
+}
+
+.ndp-language-list::-webkit-scrollbar-thumb {
+  background: #00497a;
+  border-radius: 8px;
+}
+
+/* Visible focus ring for keyboard users. WCAG 2.4.7 — the reference designs do
+   not specify one.
+   Form controls are deliberately excluded: nb-flexpay-ui already draws its own
+   navy focus border on inputs and selects, and adding an outline on top produced
+   two concentric blue lines around the field. The library owns field focus. */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--nb-navy);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* FieldCheckbox at 20px with a body-5 label.
+ *
+ * Both have to be CSS, for the same underlying reason: FieldCheckbox exposes
+ * only `variant`, and forwards nothing else down to the atoms it renders.
+ *
+ *   · Size — the Checkbox atom passes its own `sx` to the MUI Checkbox *after*
+ *     spreading incoming props, so a caller's `sx` is discarded outright. MUI
+ *     sizes the tick through the icon's font-size (1.5rem), not width/height,
+ *     so that is what moves.
+ *   · Typography — `variant` maps small/medium/large to body-4/subtitle-5/
+ *     subtitle-1. body-5 is not on that list, and it is the same 14px/18px as
+ *     body-4 at semibold rather than regular, so only the weight changes.
+ *     Keyed on .body-4 deliberately: if the variant is ever changed, this rule
+ *     stops matching instead of silently restyling something else.
+ *
+ * Two classes beats MUI's one, so no !important is needed. Opt-in rather than
+ * global — the 24px default is still right everywhere it was not questioned. */
+.ndp-checkbox-20 .MuiSvgIcon-root {
+  font-size: 20px;
+}
+
+.ndp-checkbox-20 .body-4 {
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Enrollment content column — centred on the viewport, clear of the rail.
+ *
+ * Below lg there is no rail, so it is a plain centred column. From lg up the
+ * rail is pinned at left:32 and is 300px wide, so the content may not start
+ * before 372px (32 + 300 + a 40px gutter). max() gives the viewport centre
+ * whenever the window is wide enough and that floor when it isn't — the column
+ * slides right as the window grows, then stops dead rather than sliding under
+ * the rail.
+ *
+ * A media query rather than inline style: the floor only applies once the rail
+ * exists, and that is a breakpoint question. */
+.ndp-enrollment-content {
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+@media (min-width: 1024px) {
+  .ndp-enrollment-content {
+    margin-left: max(372px, calc(50vw - 320px));
+    margin-right: 32px;
+  }
+}
+
+/* Respect reduced-motion for the sidebar expand/collapse transitions. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,0 +1,1 @@
+export { SupportNotice } from './SupportNotice'

@@ -1,0 +1,1 @@
+export { NationsDentalLogo } from './NationsDentalLogo'
