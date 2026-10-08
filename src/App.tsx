@@ -10,6 +10,8 @@ import { BillingLocations } from './enrollment/steps/BillingLocations'
 import { Dashboard } from './portal/Dashboard'
 import { MyBusinesses } from './portal/MyBusinesses'
 import { UsersAndRoles } from './portal/UsersAndRoles'
+import { BusinessInformation } from './newBusiness/BusinessInformation'
+import { BillingLocations as NewBusinessBilling } from './newBusiness/BillingLocations'
 import { UserDetails } from './portal/UserDetails'
 import { AccountReady } from './enrollment/steps/AccountReady'
 
@@ -30,6 +32,8 @@ export default function App() {
           <Route path="/create-account/ready" element={<AccountReady />} />
           <Route path="/home" element={<Dashboard />} />
           <Route path="/businesses" element={<MyBusinesses />} />
+          <Route path="/businesses/new" element={<BusinessInformation />} />
+          <Route path="/businesses/new/billing" element={<NewBusinessBilling />} />
           <Route path="/users" element={<UsersAndRoles />} />
           <Route path="/users/:id" element={<UserDetails />} />
 

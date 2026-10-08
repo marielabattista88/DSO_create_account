@@ -16,7 +16,7 @@
  * its tokens.css, not approximated:
  *   h-11 → 44px · rounded-lg → 8px · body4 → 14px/18px/0.3px
  *   border greyscale-200 #E7E8E9 · hover greyscale-300 #CCCCCC
- *   focus border primary #00497A + ring-2 primary/10
+ *   focus border primary #00669E + ring-2 primary/10
  *   placeholder greyscale-300 #CCCCCC · text primary-woodsmoke #222B2F
  *
  * Notes on the selectors:
@@ -30,7 +30,7 @@
 :root {
   --ndp-field-border: #e7e8e9;
   --ndp-field-border-hover: #cccccc;
-  --ndp-field-border-focus: #00497a;
+  --ndp-field-border-focus: #00669E;
   --ndp-field-ring: rgba(0, 73, 122, 0.1);
   --ndp-field-placeholder: #cccccc;
   --ndp-field-text: #222b2f;

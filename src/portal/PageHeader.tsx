@@ -4,6 +4,7 @@
  */
 
 import type { ReactNode } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './PageHeader.css'
 
 interface PageHeaderProps {
@@ -25,8 +26,9 @@ export function PageHeader({ breadcrumb, title, action }: PageHeaderProps) {
 }
 
 export function AddBusinessButton() {
+  const navigate = useNavigate()
   return (
-    <button type="button" className="phdr__btn">
+    <button type="button" className="phdr__btn" onClick={() => navigate('/businesses/new')}>
       <span aria-hidden="true" style={{ fontSize: 20, lineHeight: 1 }}>+</span>
       Add Business
     </button>

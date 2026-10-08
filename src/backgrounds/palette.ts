@@ -15,7 +15,7 @@ export const backgroundPalette = {
   /** Deepest tone — from the logo rim gradient's dark stop. */
   deep: '#0C384F',
   /** Brand navy, Primary/Navy in the Figma library. */
-  navy: '#00497A',
+  navy: '#00669E',
   /** Darkest fill, for the recessed shapes. */
   abyss: '#062A3D',
   /** Mid teal used for the large translucent shapes. */

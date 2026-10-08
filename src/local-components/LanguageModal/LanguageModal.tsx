@@ -10,14 +10,14 @@
  *   gap     40 between the title block and the list
  *   row     360 wide, padding 16/14, gap 8; radio 24 (glyph inset 8.33%);
  *           label Sub6 Medium 16/20 #222B2F; helper Caption1 12/16 Nevada #646F7D
- *   scroll  4px rail, track Grey100 #EEF0F1, thumb Navy #00497A, radius 8
+ *   scroll  4px rail, track Grey100 #EEF0F1, thumb Navy #00669E, radius 8
  *
  * The panel is capped at 80% of the viewport height. It grows with its content
  * up to that point; past it the language list — not the panel — is what
  * scrolls, so the title and the close button stay put.
  *
  * DESIGN QUESTION: the node ships two different unselected radios — #222B2F on
- * rows 1–5 and #00497A on rows 6–9. That reads as an editing artefact rather than
+ * rows 1–5 and #00669E on rows 6–9. That reads as an editing artefact rather than
  * intent, so a single treatment is used here (#222B2F, the majority and the
  * conventional neutral against the #09437D selected state). Confirm with design.
  */

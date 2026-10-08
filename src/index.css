@@ -35,7 +35,7 @@
    (Claims-Portals-HI-FI). These are the source of truth for the prototype's
    own layout chrome; component internals come from nb-flexpay-ui. */
 :root {
-  --nb-navy: #00497a;
+  --nb-navy: #00669E;
   --nb-navy-dark: #003a62;
   --nb-woodsmoke: #222b2f;
   --nb-coral: #f25d4a;
@@ -189,7 +189,7 @@ div.border-l-4 div.flex.flex-col > strong + span {
    it does not restyle scrollbars elsewhere. */
 .ndp-language-list {
   scrollbar-width: thin;
-  scrollbar-color: #00497a #eef0f1;
+  scrollbar-color: #00669E #eef0f1;
 }
 
 .ndp-language-list::-webkit-scrollbar {
@@ -202,7 +202,7 @@ div.border-l-4 div.flex.flex-col > strong + span {
 }
 
 .ndp-language-list::-webkit-scrollbar-thumb {
-  background: #00497a;
+  background: #00669E;
   border-radius: 8px;
 }
 
@@ -274,3 +274,13 @@ div.border-l-4 div.flex.flex-col > strong + span {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Buttons — palette from Figma Button (423:113700): #0087CD, hover/pressed #00669E, disabled #E7E8E9 / #B1B1B1 */
+button.bg-primary-main {
+  background-color: #0087cd; border-color: #0087cd; font-weight: 600;
+}
+button.bg-primary-main:hover:not(:disabled), button.bg-primary-main:active:not(:disabled) {
+  background-color: #00669e; border-color: #00669e;
+}
+button.bg-primary-main:disabled { background-color: #e7e8e9; border-color: #e7e8e9; color: #b1b1b1; }
+button.bg-primary-main:focus-visible { outline: 2px solid #0087cd; outline-offset: 2px; box-shadow: none; }

@@ -16,8 +16,8 @@ interface NationsDentalLogoProps {
 
 export function NationsDentalLogo({ surface = 'light', height = 20 }: NationsDentalLogoProps) {
   const onDark = surface === 'dark'
-  const ink = onDark ? '#FFFFFF' : '#00497A'
-  const plate = onDark ? '#FFFFFF' : '#00497A'
+  const ink = onDark ? '#FFFFFF' : '#00669E'
+  const plate = onDark ? '#FFFFFF' : '#00669E'
   const plateText = onDark ? '#002843' : '#FFFFFF'
 
   return (

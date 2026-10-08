@@ -74,7 +74,7 @@ export function AppLoader({
               width: 12,
               height: 12,
               borderRadius: '50%',
-              background: '#00497A',
+              background: '#00669E',
               animation: 'ndp-dot-bounce 0.9s ease-in-out infinite',
               animationDelay: delay,
             }}

@@ -3,6 +3,7 @@
  * Static prototype: numbers and businesses are sample data.
  */
 
+import { useNavigate } from 'react-router-dom'
 import { PortalNav } from './PortalNav'
 import { useEnrollment } from '../enrollment/data/store'
 import './Dashboard.css'
@@ -41,6 +42,7 @@ function BuildingIcon({ size }: { size: number }) {
 }
 
 export function Dashboard() {
+  const navigate = useNavigate()
   const { state } = useEnrollment()
   const dsoName = state.organization.legalName || '[DSO]'
 
@@ -61,7 +63,7 @@ export function Dashboard() {
             <h2>We found your businesses in our records</h2>
             <p>5 businesses were pre-loaded. Some need your attention before they can go live. Review the action items below to get started.</p>
           </div>
-          <button type="button" className="dash__banner-btn">View All Business</button>
+          <button type="button" className="dash__banner-btn" onClick={() => navigate('/businesses')}>View All Business</button>
         </section>
 
         <section className="dash__stats">

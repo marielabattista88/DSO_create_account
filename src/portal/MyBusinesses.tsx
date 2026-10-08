@@ -193,7 +193,7 @@ export function MyBusinesses() {
                     <td className="biz__center"><span className={`biz__badge biz__badge--${BADGE[b.status]}`}>{b.status}</span></td>
                     <td>
                       <div className="biz__actions">
-                        <button type="button" className="biz__link">View Details <span aria-hidden="true">›</span></button>
+                        <button type="button" className="biz__link">View Details</button>
                         <button type="button" className="biz__portal">Go to Potal <ExternalIcon /></button>
                       </div>
                     </td>

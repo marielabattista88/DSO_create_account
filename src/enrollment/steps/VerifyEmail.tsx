@@ -31,7 +31,7 @@ const linkStyle: React.CSSProperties = {
   fontSize: 16,
   lineHeight: '20px',
   letterSpacing: '0.3px',
-  color: '#00497A',
+  color: '#00669E',
   textDecoration: 'underline',
   background: 'transparent',
   border: 0,

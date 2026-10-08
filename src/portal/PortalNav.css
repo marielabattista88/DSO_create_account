@@ -20,8 +20,8 @@
 }
 .pnav__tab:hover { background: rgba(255, 255, 255, 0.16); }
 .pnav__tab:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-.pnav__tab--active { background: #0a6aa8; }
-.pnav__tab--active:hover { background: #0d7ec7; }
+.pnav__tab--active { background: #00669e; }
+.pnav__tab--active:hover { background: #0087cd; }
 
 .pnav__right { display: flex; align-items: center; justify-content: flex-end; gap: 16px; height: 40px; }
 .pnav__icons { display: flex; gap: 8px; }
