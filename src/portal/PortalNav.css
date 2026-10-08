@@ -61,3 +61,14 @@
 /* Keeps the page width constant between routes so the menu doesn't shift when the scrollbar appears/disappears */
 html { scrollbar-gutter: stable; overflow-y: scroll; }
 .pnav__tab { box-sizing: border-box; flex-shrink: 0; white-space: nowrap; }
+
+.pnav__account { position: relative; }
+.pnav__pop { position: absolute; top: calc(100% + 8px); right: 0; z-index: 50; width: 320px; box-sizing: border-box; padding: 16px 12px 12px; background: #fff; border-radius: 8px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16); color: #222b2f; }
+.pnav__pop-head { display: flex; flex-direction: column; gap: 2px; padding: 0 8px 16px; margin-bottom: 8px; border-bottom: 1px solid #c9ccd6; }
+.pnav__pop-head strong { font-size: 18px; line-height: 24px; font-weight: 700; }
+.pnav__pop-head span { font-size: 14px; color: #72777a; }
+.pnav__pop-item { display: flex; align-items: center; gap: 12px; width: 100%; height: 48px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; font: inherit; font-size: 16px; color: #222b2f; cursor: pointer; text-align: left; }
+.pnav__pop-item span { flex: 1; }
+.pnav__pop-item:hover { background: #f3fbff; }
+.pnav__pop-out { margin-top: 24px; color: #d0343f; }
+.pnav__pop-out:hover { background: #fdf0f1; }

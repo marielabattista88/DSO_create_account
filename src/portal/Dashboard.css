@@ -57,3 +57,16 @@
   .dash__stats { grid-template-columns: repeat(2, 1fr); }
   .dash__panels { grid-template-columns: 1fr; }
 }
+
+.dash__top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+.dash__top .dash__hero { margin-bottom: 0; }
+.dash__stats--4 { grid-template-columns: repeat(4, 1fr); margin-top: 0; }
+.dash__count { font-size: 14px; color: #52606d; }
+.dash__last { margin-top: 16px; min-height: 0; }
+.dash__cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding-top: 16px; }
+.dash__card { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; text-align: left; font: inherit; cursor: pointer; padding: 16px; background: #fff; border: 1px solid #7fb9dc; border-radius: 6px; }
+.dash__card:hover { background: #f3fbff; }
+.dash__card span { display: flex; flex-direction: column; gap: 4px; }
+.dash__card strong { font-size: 16px; line-height: 20px; color: #222b2f; }
+.dash__card small { font-size: 14px; color: #72777a; }
+@media (max-width: 900px) { .dash__stats--4 { grid-template-columns: repeat(2, 1fr); } .dash__cards { grid-template-columns: 1fr; } }

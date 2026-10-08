@@ -5,6 +5,7 @@
  *   right      2 icon buttons 36×36 (8px gap) · 16px · 1px divider · 16px · profile 158×40
  */
 
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import logoUrl from '../assets/nations-dental-logo.svg'
 import { useEnrollment } from '../enrollment/data/store'
@@ -32,6 +33,16 @@ export function PortalNav() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const { state } = useEnrollment()
+  const [open, setOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!open) return
+    const close = (e: MouseEvent) => { if (!menuRef.current?.contains(e.target as Node)) setOpen(false) }
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false) }
+    document.addEventListener('mousedown', close)
+    document.addEventListener('keydown', esc)
+    return () => { document.removeEventListener('mousedown', close); document.removeEventListener('keydown', esc) }
+  }, [open])
   const fullName = [state.firstName, state.lastName].filter(Boolean).join(' ') || 'John Doe'
   const initials = fullName
     .split(' ')
@@ -70,7 +81,8 @@ export function PortalNav() {
           </button>
         </div>
         <span className="pnav__divider" />
-        <button type="button" className="pnav__profile" onClick={() => navigate('/')} aria-label="Account menu">
+        <div className="pnav__account" ref={menuRef}>
+        <button type="button" className="pnav__profile" onClick={() => setOpen((o) => !o)} aria-label="Account menu" aria-expanded={open}>
           <span className="pnav__avatar" aria-hidden="true">{initials}</span>
           <span className="pnav__who">
             <strong>{fullName}</strong>
@@ -80,6 +92,29 @@ export function PortalNav() {
             <Icon d={CHEVRON} size={16} />
           </span>
         </button>
+        {open && (
+          <div className="pnav__pop" role="menu">
+            <div className="pnav__pop-head">
+              <strong>{fullName}</strong>
+              <span>{state.email || 'johndoe@gmail.com'}</span>
+            </div>
+            <button type="button" role="menuitem" className="pnav__pop-item">
+              <Icon d="M12 15a3 3 0 100-6 3 3 0 000 6M19 12a7 7 0 00-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 00-2-1.2L14.2 3H9.8l-.4 2.7a7 7 0 00-2 1.2l-2.3-1-2 3.4 2 1.5a7 7 0 000 2.4l-2 1.5 2 3.4 2.3-1a7 7 0 002 1.2l.4 2.7h4.4l.4-2.7a7 7 0 002-1.2l2.3 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2Z" size={20} />
+              <span>Settings</span>
+              <Icon d="m9 6 6 6-6 6" size={18} />
+            </button>
+            <button type="button" role="menuitem" className="pnav__pop-item">
+              <Icon d="M6 3h12v18H6zM9 8h6M9 12h6" size={20} />
+              <span>Agreements</span>
+              <Icon d="m9 6 6 6-6 6" size={18} />
+            </button>
+            <button type="button" role="menuitem" className="pnav__pop-item pnav__pop-out" onClick={() => navigate('/')}>
+              <Icon d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" size={20} />
+              <span>Sign out</span>
+            </button>
+          </div>
+        )}
+        </div>
       </div>
     </header>
   )
