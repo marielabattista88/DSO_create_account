@@ -106,10 +106,11 @@ export function AuthLayout({
               </div>
             ) : null}
 
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4" style={{ justifyContent: align === 'center' ? 'center' : 'space-between' }}>
               <h1 className="heading-1" style={{ color: 'var(--nb-woodsmoke)', margin: 0, textAlign: align }}>
                 {title}
               </h1>
+              {titleAside}
             </div>
 
             {belowTitle ? (

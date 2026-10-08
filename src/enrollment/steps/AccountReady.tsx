@@ -10,6 +10,7 @@ import { Button } from 'nb-flexpay-ui'
 import { AuthLayout } from '../components/AuthLayout'
 import { PrimaryAction } from '../components/PrimaryAction'
 import { StatusAnimation } from '../../local-components'
+import { MailIcon, PhoneIcon } from '../../local-components/ContactIcons'
 import { useEnrollment } from '../data/store'
 
 const NEXT_STEPS = [
@@ -44,10 +45,8 @@ export function AccountReady() {
       onSignOut={() => navigate('/create-account/email')}
       aboveTitle={<StatusAnimation status="success" size={72} />}
       title="Your Organization’s Account Is Ready!"
-      description="Next, review and complete your organization and location information to finish your enrollment."
-    >
-      <div className="flex justify-center" style={{ marginTop: -8, marginBottom: 24 }}>
-        {organization.legalName ? (
+      belowTitle={
+        organization.legalName ? (
           <span
             style={{
               fontSize: 14,
@@ -60,8 +59,11 @@ export function AccountReady() {
             {organization.legalName}
             {maskedTin ? ` · TIN ${maskedTin}` : ''}
           </span>
-        ) : null}
-      </div>
+        ) : null
+      }
+      description="Next, review and complete your organization and location information to finish your enrollment."
+    >
+      <div style={{ height: 8 }} />
 
       <section style={{ marginBottom: 16 }}>
         <h2 style={sectionTitle}>What’s next?</h2>
@@ -79,12 +81,14 @@ export function AccountReady() {
         <p style={{ ...smallText, margin: '4px 0 8px' }}>
           Questions about your account or enrollment? Contact our Provider Services team:
         </p>
-        <p style={smallText}>
+        <p style={{ ...smallText, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <MailIcon />
           <a href={`mailto:${SUPPORT_EMAIL}`} style={{ color: 'inherit' }}>
             {SUPPORT_EMAIL}
           </a>
         </p>
-        <p style={smallText}>
+        <p style={{ ...smallText, display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
+          <PhoneIcon />
           <a href={`tel:${SUPPORT_PHONE.replace(/\D/g, '')}`} style={{ color: 'inherit' }}>
             {SUPPORT_PHONE}
           </a>
@@ -92,7 +96,7 @@ export function AccountReady() {
       </section>
 
       <PrimaryAction>
-        <Button type="button" variant="filled" size="medium" style={{ width: '100%' }}>
+        <Button type="button" variant="filled" size="medium" style={{ width: '100%' }} onClick={() => navigate('/home')}>
           Go to NationsDental Portal
         </Button>
       </PrimaryAction>
