@@ -1,6 +1,6 @@
 /**
  * Create-account shell: night background, optional top nav, white card with the
- * "Step N of 5" rail on the counted steps.
+ * "Step N of 6" rail on the counted steps.
  */
 
 import type { ReactNode } from 'react'
@@ -8,10 +8,10 @@ import { BrandHeader } from './BrandHeader'
 import { NationsDentalLogo } from '../../local-components'
 import { BrandBackground, backgroundPalette } from '../../backgrounds'
 
-export const TOTAL_STEPS = 5
+export const TOTAL_STEPS = 6
 
 interface AuthLayoutProps {
-  /** 1–5 on the counted steps; omit on the final screen. */
+  /** 1–6 on the counted steps; omit on the final screen. */
   step?: number
   title: string
   description?: ReactNode

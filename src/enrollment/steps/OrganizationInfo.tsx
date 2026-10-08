@@ -13,7 +13,6 @@ import {
   FieldInput,
   FieldMaskInput,
   FieldSelect,
-  FieldToggle,
   useForm,
 } from 'nb-flexpay-ui'
 import { AuthLayout } from '../components/AuthLayout'
@@ -146,13 +145,10 @@ export function OrganizationInfo() {
                   placeholder={sole ? '555-55-5555' : '55-55555555'}
                 />
               </div>
-              <div className="min-w-0 sm:pb-3">
-                <FieldToggle name="soleProprietorship" label="Is This a Sole Proprietorship?" />
-              </div>
             </div>
 
-            <FieldInput name="address1" label="Address Line 1" required placeholder="e.g 1725 Slough Avenue" />
-            <FieldInput name="address2" label="Address Line 2" placeholder="e.g. Suite 1450" />
+            <FieldInput name="address1" label="Registered address Line 1" required placeholder="e.g 1725 Slough Avenue" />
+            <FieldInput name="address2" label="Registered address Line 2" placeholder="e.g. Suite 1450" />
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="min-w-0">

@@ -69,7 +69,7 @@ export function OrganizationFound() {
           variant="filled"
           size="medium"
           style={{ width: '100%' }}
-          onClick={() => navigate('/create-account/ready')}
+          onClick={() => navigate('/create-account/billing')}
         >
           Continue
         </Button>
