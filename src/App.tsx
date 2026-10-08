@@ -19,6 +19,7 @@ import { AddProvider } from './newBusiness/AddProvider'
 import { BankAccounts } from './newBusiness/BankAccounts'
 import { ReviewSubmit } from './newBusiness/ReviewSubmit'
 import { Submitted } from './newBusiness/Submitted'
+import { Settings } from './portal/Settings'
 import { UserDetails } from './portal/UserDetails'
 import { AccountReady } from './enrollment/steps/AccountReady'
 
@@ -48,6 +49,7 @@ export default function App() {
           <Route path="/businesses/new/bank" element={<BankAccounts />} />
           <Route path="/businesses/new/review" element={<ReviewSubmit />} />
           <Route path="/businesses/new/submitted" element={<Submitted />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/users" element={<UsersAndRoles />} />
           <Route path="/users/:id" element={<UserDetails />} />
 

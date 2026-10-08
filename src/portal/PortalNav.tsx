@@ -98,7 +98,7 @@ export function PortalNav() {
               <strong>{fullName}</strong>
               <span>{state.email || 'johndoe@gmail.com'}</span>
             </div>
-            <button type="button" role="menuitem" className="pnav__pop-item">
+            <button type="button" role="menuitem" className="pnav__pop-item" onClick={() => navigate('/settings')}>
               <Icon d="M12 15a3 3 0 100-6 3 3 0 000 6M19 12a7 7 0 00-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 00-2-1.2L14.2 3H9.8l-.4 2.7a7 7 0 00-2 1.2l-2.3-1-2 3.4 2 1.5a7 7 0 000 2.4l-2 1.5 2 3.4 2.3-1a7 7 0 002 1.2l.4 2.7h4.4l.4-2.7a7 7 0 002-1.2l2.3 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2Z" size={20} />
               <span>Settings</span>
               <Icon d="m9 6 6 6-6 6" size={18} />

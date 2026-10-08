@@ -1,0 +1,11 @@
+.set { min-height: 100vh; background: #eef3f8; color: #222b2f; }
+.set__main { width: 100%; max-width: 800px; margin: 0 auto; box-sizing: border-box; padding: 32px 16px 48px; display: flex; flex-direction: column; gap: 24px; }
+.set__group h2 { margin: 0 0 8px; font-size: 18px; line-height: 27px; font-weight: 700; }
+.set__card { display: flex; flex-direction: column; gap: 8px; padding: 16px; background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); }
+.set__row { display: flex; align-items: center; gap: 16px; width: 100%; min-height: 74px; padding: 12px 8px; border: 0; border-radius: 8px; background: transparent; font: inherit; text-align: left; cursor: pointer; }
+.set__row:hover { background: #f3fbff; }
+.set__icon { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; background: #e8f2f8; color: #00669e; }
+.set__text { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.set__text strong { font-size: 18px; line-height: 24px; font-weight: 600; color: #00669e; }
+.set__text small { font-size: 14px; line-height: 20px; color: #3b4448; }
+.set__chev { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #eceeef; color: #3b4448; }
