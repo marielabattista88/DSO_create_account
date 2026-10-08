@@ -8,7 +8,7 @@ import { OrganizationInfo } from './enrollment/steps/OrganizationInfo'
 import { OrganizationFound } from './enrollment/steps/OrganizationFound'
 import { BillingLocations } from './enrollment/steps/BillingLocations'
 import { Dashboard } from './portal/Dashboard'
-import { Businesses, UsersAndRoles } from './portal/Businesses'
+import { MyBusinesses, UsersAndRoles } from './portal/MyBusinesses'
 import { AccountReady } from './enrollment/steps/AccountReady'
 
 export default function App() {
@@ -27,7 +27,7 @@ export default function App() {
           <Route path="/create-account/billing" element={<BillingLocations />} />
           <Route path="/create-account/ready" element={<AccountReady />} />
           <Route path="/home" element={<Dashboard />} />
-          <Route path="/businesses" element={<Businesses />} />
+          <Route path="/businesses" element={<MyBusinesses />} />
           <Route path="/users" element={<UsersAndRoles />} />
 
           <Route path="*" element={<Navigate to="/" replace />} />

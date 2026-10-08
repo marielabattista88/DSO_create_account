@@ -1,0 +1,100 @@
+.biz { background: #eef3f8; min-height: 100vh; }
+.biz__content { padding: 16px 24px 24px; }
+.biz__card { background: #fff; border-radius: 12px; padding: 24px 16px 24px; display: flex; flex-direction: column; gap: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.biz__inner { display: flex; flex-direction: column; gap: 16px; }
+
+.biz__search { display: flex; align-items: center; gap: 16px; }
+.biz__field { position: relative; width: 560px; max-width: 100%; height: 40px; }
+.biz__field input { width: 100%; height: 100%; box-sizing: border-box; padding: 0 40px; border: 1px solid #c5d0db; border-radius: 20px; font: inherit; font-size: 14px; color: #0a6aa8; background: #fff; outline: none; }
+.biz__field input:focus { border-color: #0a6aa8; box-shadow: 0 0 0 2px rgba(10,106,168,.2); }
+.biz__field svg { position: absolute; left: 14px; top: 12px; color: #0a6aa8; pointer-events: none; }
+.biz__field button { position: absolute; right: 8px; top: 8px; width: 24px; height: 24px; border: 0; background: transparent; cursor: pointer; font-size: 18px; line-height: 1; color: #1f2933; border-radius: 50%; }
+.biz__field button:hover { background: #eef3f8; }
+.biz__status { width: 220px; height: 40px; box-sizing: border-box; padding: 0 16px; border: 1px solid #c5d0db; border-radius: 20px; background: #fff; font: inherit; font-size: 14px; color: #52606d; cursor: pointer; }
+.biz__clear { border: 0; background: transparent; font: inherit; font-size: 14px; font-weight: 600; color: #9aa5b1; cursor: pointer; padding: 8px; }
+.biz__clear:not(:disabled) { color: #0087cd; }
+.biz__clear:not(:disabled):hover { color: #00669e; text-decoration: underline; }
+
+.biz__table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #e4e9ef; border-radius: 8px; overflow: hidden; font-size: 14px; }
+.biz__table th { height: 40px; padding: 0 16px; background: #eef4f9; color: #1f2933; font-weight: 600; text-align: left; }
+.biz__table td { height: 41px; padding: 0 16px; border-top: 1px solid #e4e9ef; color: #1f2933; }
+.biz__center { text-align: center !important; }
+.biz__badge { display: inline-block; min-width: 100px; padding: 2px 8px; border-radius: 4px; text-align: center; font-size: 12px; font-weight: 600; line-height: 16px; }
+.biz__badge--active { background: #dcefe3; color: #1f8a4c; }
+.biz__badge--rejected { background: #fbe3e3; color: #c0392b; }
+.biz__badge--review { background: #ead9fb; color: #6b2fc0; }
+.biz__badge--inactive { background: #eceff2; color: #52606d; }
+.biz__badge--partial { background: #fdf0c8; color: #8a6300; }
+.biz__actions { display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
+.biz__link { color: #0087cd; font-weight: 600; font-size: 12px; text-decoration: underline; background: none; border: 0; cursor: pointer; padding: 0; }
+.biz__link span { text-decoration: none; display: inline-block; margin-left: 8px; color: #52606d; }
+.biz__portal { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border: 1px solid #0087cd; border-radius: 6px; background: #fff; color: #0087cd; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 120ms ease, color 120ms ease, border-color 120ms ease; }
+.biz__portal:hover { background: #f3fbff; border-color: #00669e; color: #00669e; }
+.biz__portal:active { background: #ecfaff; }
+.biz__portal:focus-visible, .biz__link:focus-visible { outline: 2px solid #0087cd; outline-offset: 2px; }
+.biz__empty { padding: 32px; text-align: center; color: #52606d; }
+
+.biz__pager { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; font-size: 12px; color: #1f2933; }
+.biz__rows { display: flex; align-items: center; gap: 12px; }
+.biz__rows select { height: 32px; padding: 0 8px; border: 1px solid #0a6aa8; border-radius: 6px; background: #fff; font: inherit; color: #1f2933; }
+.biz__pages { display: flex; gap: 8px; }
+.biz__page { min-width: 32px; height: 32px; padding: 0; border: 1px solid #e4e9ef; border-radius: 6px; background: #fff; color: #1f2933; font: inherit; font-size: 12px; cursor: pointer; }
+.biz__page:hover:not(:disabled) { background: #eef3f8; }
+.biz__page:disabled { opacity: .4; cursor: default; }
+.biz__page--on { background: #00669e; border-color: #00669e; color: #fff; font-weight: 700; }
+.biz__page--on:hover:not(:disabled) { background: #00669e; }
+
+.biz__table { line-height: 20px; }
+.biz__table th, .biz__table td, .biz__badge, .biz__link, .biz__portal, .biz__clear { white-space: nowrap; }
+.biz__card { overflow-x: auto; }
+.biz__table { min-width: 1000px; }
+.biz__portal, .biz__link { line-height: 16px; }
+
+/* Row: Figma "Business-DSO" 58px = 6px vertical + 46px content, 8px side padding; hover fills the whole row */
+.biz__table { table-layout: fixed; border: 0; border-radius: 0; min-width: 1100px; }
+.biz__table th { height: 40px; padding: 0 16px; border-radius: 8px 8px 0 0; }
+.biz__table td { height: 58px; padding: 6px 16px; box-sizing: border-box; border-top: 0; overflow: hidden; text-overflow: ellipsis; background: transparent; transition: background-color 0.15s; }
+.biz__actions { gap: 16px; justify-content: flex-start; }
+
+/* Continuous header: only the outer corners are rounded */
+.biz__table th { border-radius: 0; }
+.biz__table th:first-child { border-radius: 8px 0 0 8px; }
+.biz__table th:last-child { border-radius: 0 8px 8px 0; }
+
+/* Status dropdown: 220×40, 16px inner padding, chevron aligned right */
+.biz__dd { position: relative; width: 220px; height: 40px; flex-shrink: 0; }
+.biz__dd-trigger { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; height: 100%; box-sizing: border-box; padding: 0 16px; border: 1px solid #c5d0db; border-radius: 20px; background: #fff; color: #52606d; font: inherit; font-size: 14px; cursor: pointer; text-align: left; }
+.biz__dd-trigger:hover { border-color: #0a6aa8; }
+.biz__dd-trigger:focus-visible, .biz__dd-trigger[aria-expanded="true"] { outline: none; border-color: #0a6aa8; box-shadow: 0 0 0 2px rgba(10,106,168,.2); }
+.biz__dd-trigger--set { color: #1f2933; }
+.biz__dd-menu { position: absolute; z-index: 10; top: 44px; left: 0; right: 0; margin: 0; padding: 8px; list-style: none; background: #fff; border: 1px solid #e4e9ef; border-radius: 12px; box-shadow: 0 8px 24px rgba(15,35,55,.14); }
+.biz__dd-menu li { padding: 8px 12px; border-radius: 8px; font-size: 14px; line-height: 20px; color: #1f2933; cursor: pointer; }
+.biz__dd-menu li:hover { background: #eef4f9; }
+.biz__dd-menu li.is-selected { color: #0a6aa8; font-weight: 600; }
+.biz__card { overflow: visible; }
+.biz__inner { position: relative; }
+
+/* Actions always pinned to the right edge of the row */
+.biz__actions { justify-content: flex-end; }
+.biz__table td:last-child { text-align: right; }
+.biz__scroll { overflow-x: auto; }
+.biz__table { min-width: 1100px; width: 100%; }
+
+/* Rows section: 0.5px grey-200 border; each row has a bottom line (except the last) */
+.biz__scroll { border: 0.5px solid #e4e9ef; border-radius: 8px; }
+.biz__table td { border-bottom: 0.5px solid #e4e9ef; }
+.biz__table tbody tr:last-child td { border-bottom: 0; }
+
+/* Single clean border: the wrapper clips the corners, the header has no radius of its own */
+.biz__scroll { overflow-y: hidden; }
+.biz__table, .biz__table th, .biz__table th:first-child, .biz__table th:last-child { border-radius: 0; border: 0; }
+.biz__table th { border-bottom: 0.5px solid #e4e9ef; }
+
+/* The white card stretches to the bottom of the screen, always 24px above the edge; pager stays at its bottom */
+.biz { display: flex; flex-direction: column; min-height: 100vh; box-sizing: border-box; }
+.biz__content { flex: 1; display: flex; box-sizing: border-box; padding: 16px 24px 24px; min-height: 0; }
+.biz__card { flex: 1; justify-content: space-between; }
+.biz__inner { flex: 1; }
+
+/* Hover only on the action buttons */
+.biz__link:hover { color: #00669e; }
