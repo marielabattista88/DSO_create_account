@@ -1,0 +1,58 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # nb-flexpay-ui lives in a private Azure Artifacts feed; AZURE_NPM_PAT is a PAT with Packaging > Read.
+      - name: Configure private registry auth
+        env:
+          AZURE_NPM_PAT: ${{ secrets.AZURE_NPM_PAT }}
+        run: |
+          B64=$(printf '%s' "$AZURE_NPM_PAT" | base64 -w0)
+          echo "::add-mask::$B64"
+          REG=//pkgs.dev.azure.com/NationsBenefits2/_packaging/NationsBenefits/npm/registry/
+          {
+            echo "${REG}:username=NationsBenefits2"
+            echo "${REG}:_password=$B64"
+            echo "${REG}:email=npm@example.com"
+            echo "always-auth=true"
+          } >> ~/.npmrc
+
+      - run: npm ci
+      - run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
