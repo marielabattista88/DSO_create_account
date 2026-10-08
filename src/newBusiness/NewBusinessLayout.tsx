@@ -30,6 +30,7 @@ export function NewBusinessLayout({ active, title, description, onBack, children
   const navigate = useNavigate()
   const flat = NB_STEPS.flatMap((s) => s.items)
   const activeIndex = flat.indexOf(active)
+  const last = activeIndex === flat.length - 1
 
   return (
     <div className="nb">
@@ -52,7 +53,7 @@ export function NewBusinessLayout({ active, title, description, onBack, children
             {NB_STEPS.map((group) => {
               const groupStart = flat.indexOf(group.items[0])
               const groupActive = group.items.includes(active)
-              const groupDone = groupStart + group.items.length - 1 < activeIndex
+              const groupDone = last || groupStart + group.items.length - 1 < activeIndex
               return (
                 <li key={group.title} className="nb__group">
                   <div className={`nb__group-title${groupActive ? ' is-active' : ''}`}>
@@ -61,7 +62,7 @@ export function NewBusinessLayout({ active, title, description, onBack, children
                   </div>
                   <ul>
                     {group.items.map((item) => {
-                      const done = flat.indexOf(item) < activeIndex
+                      const done = last || flat.indexOf(item) < activeIndex
                       return (
                         <li key={item} className={item === active ? 'is-active' : undefined} aria-current={item === active ? 'step' : undefined}>
                           <span className={`nb__dot${done ? ' is-done' : ''}`} aria-hidden="true">
