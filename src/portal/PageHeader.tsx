@@ -8,7 +8,7 @@ import './PageHeader.css'
 
 interface PageHeaderProps {
   breadcrumb: string
-  title: string
+  title: ReactNode
   action?: ReactNode
 }
 

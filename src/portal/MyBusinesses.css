@@ -98,3 +98,8 @@
 
 /* Hover only on the action buttons */
 .biz__link:hover { color: #00669e; }
+
+/* View Details: underlined link + filled blue circle chevron (Figma 8912:244187) */
+.biz__link { display: inline-flex; align-items: center; gap: 8px; }
+.biz__link span { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; margin-left: 0; border-radius: 50%; background: #0087cd; color: #fff; font-size: 14px; line-height: 1; text-decoration: none; padding-bottom: 1px; box-sizing: border-box; flex-shrink: 0; }
+.biz__link:hover span { background: #00669e; }

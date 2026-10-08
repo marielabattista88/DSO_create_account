@@ -5,15 +5,17 @@
  */
 
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { PortalNav } from './PortalNav'
 import { AddUserButton, PageHeader } from './PageHeader'
 import { StatusDropdown, pageList } from './MyBusinesses'
 import './MyBusinesses.css'
 import './UsersAndRoles.css'
 
-type Role = 'DSO Admin' | 'DSO Manager'
+export type Role = 'DSO Admin' | 'DSO Manager'
 
-interface User {
+export interface User {
+  id: number
   name: string
   role: Role
   email: string
@@ -23,12 +25,12 @@ interface User {
   businesses: string[]
 }
 
-const ROLES: Role[] = ['DSO Admin', 'DSO Manager']
-const ROLE_INFO: Record<Role, string> = {
+export const ROLES: Role[] = ['DSO Admin', 'DSO Manager']
+export const ROLE_INFO: Record<Role, string> = {
   'DSO Admin': 'Access to all businesses. Can add users and assign roles.',
   'DSO Manager': 'Manages only the assigned businesses. Cannot assign roles.',
 }
-const BUSINESSES = [
+export const BUSINESSES = [
   'Bright Smile Dental Group LLC',
   'Bright Smile Dental Group SA',
   'Sunrise Family Dentistry',
@@ -38,7 +40,8 @@ const BUSINESSES = [
 ]
 
 const NAMES = ['Michael Scott', 'Susan Doe', 'Laura Pérez', 'Daniel Kim', 'Olivia Brown', 'Carlos Ruiz', 'Emma Wilson', 'Noah Davis', 'Sofia Martin', 'Liam Johnson', 'Ava Garcia', 'Lucas Moore']
-const SEED: User[] = NAMES.map((name, i) => ({
+export const SEED: User[] = NAMES.map((name, i) => ({
+  id: i,
   name,
   role: i % 3 === 0 ? 'DSO Admin' : 'DSO Manager',
   email: `${name.split(' ')[0].toLowerCase()}@gmail.com`,
@@ -47,6 +50,9 @@ const SEED: User[] = NAMES.map((name, i) => ({
   active: i % 5 !== 3,
   businesses: i % 3 === 0 ? BUSINESSES : BUSINESSES.slice(i % 3, (i % 3) + 1 + (i % 2)),
 }))
+
+// users added in this session, so the details page can find them
+export const extraUsers: User[] = []
 
 const SearchIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
@@ -108,7 +114,7 @@ function AddUserModal({ onClose, onSave }: { onClose: () => void; onSave: (u: Us
             disabled={!valid}
             onClick={() =>
               onSave({
-                name: name.trim(), role, email: email.trim(), phone: '(123) 435-7835',
+                id: Date.now(), name: name.trim(), role, email: email.trim(), phone: '(123) 435-7835',
                 created: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
                 active: true, businesses: role === 'DSO Admin' ? BUSINESSES : selected,
               })
@@ -123,7 +129,8 @@ function AddUserModal({ onClose, onSave }: { onClose: () => void; onSave: (u: Us
 }
 
 export function UsersAndRoles() {
-  const [users, setUsers] = useState(SEED)
+  const navigate = useNavigate()
+  const [users, setUsers] = useState(() => [...extraUsers, ...SEED])
   const [query, setQuery] = useState('')
   const [role, setRole] = useState('')
   const [page, setPage] = useState(1)
@@ -192,7 +199,7 @@ export function UsersAndRoles() {
                       <td className="biz__center"><span className={`biz__badge biz__badge--${u.active ? 'active' : 'inactive'}`}>{u.active ? 'Active' : 'Inactive'}</span></td>
                       <td>
                         <div className="biz__actions">
-                          <button type="button" className="biz__link">View Details <span aria-hidden="true">›</span></button>
+                          <button type="button" className="biz__link" onClick={() => navigate(`/users/${u.id}`)}>View Details <span aria-hidden="true">›</span></button>
                         </div>
                       </td>
                     </tr>
@@ -219,7 +226,7 @@ export function UsersAndRoles() {
           </div>
         </section>
       </main>
-      {adding && <AddUserModal onClose={() => setAdding(false)} onSave={(u) => { setUsers((l) => [u, ...l]); setAdding(false); setPage(1) }} />}
+      {adding && <AddUserModal onClose={() => setAdding(false)} onSave={(u) => { extraUsers.unshift(u), setUsers((l) => [u, ...l]); setAdding(false); setPage(1) }} />}
     </div>
   )
 }

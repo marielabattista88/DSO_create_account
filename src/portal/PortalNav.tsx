@@ -51,8 +51,8 @@ export function PortalNav() {
           <button
             key={tab.path}
             type="button"
-            className={`pnav__tab${pathname === tab.path ? ' pnav__tab--active' : ''}`}
-            aria-current={pathname === tab.path ? 'page' : undefined}
+            className={`pnav__tab${(pathname === tab.path || pathname.startsWith(tab.path + '/')) ? ' pnav__tab--active' : ''}`}
+            aria-current={(pathname === tab.path || pathname.startsWith(tab.path + '/')) ? 'page' : undefined}
             onClick={() => navigate(tab.path)}
           >
             {tab.label}

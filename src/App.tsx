@@ -10,6 +10,7 @@ import { BillingLocations } from './enrollment/steps/BillingLocations'
 import { Dashboard } from './portal/Dashboard'
 import { MyBusinesses } from './portal/MyBusinesses'
 import { UsersAndRoles } from './portal/UsersAndRoles'
+import { UserDetails } from './portal/UserDetails'
 import { AccountReady } from './enrollment/steps/AccountReady'
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/home" element={<Dashboard />} />
           <Route path="/businesses" element={<MyBusinesses />} />
           <Route path="/users" element={<UsersAndRoles />} />
+          <Route path="/users/:id" element={<UserDetails />} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
