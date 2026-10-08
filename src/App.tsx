@@ -12,6 +12,8 @@ import { MyBusinesses } from './portal/MyBusinesses'
 import { UsersAndRoles } from './portal/UsersAndRoles'
 import { BusinessInformation } from './newBusiness/BusinessInformation'
 import { BillingLocations as NewBusinessBilling } from './newBusiness/BillingLocations'
+import { ServiceLocations } from './newBusiness/ServiceLocations'
+import { AddServiceLocation } from './newBusiness/AddServiceLocation'
 import { UserDetails } from './portal/UserDetails'
 import { AccountReady } from './enrollment/steps/AccountReady'
 
@@ -34,6 +36,8 @@ export default function App() {
           <Route path="/businesses" element={<MyBusinesses />} />
           <Route path="/businesses/new" element={<BusinessInformation />} />
           <Route path="/businesses/new/billing" element={<NewBusinessBilling />} />
+          <Route path="/businesses/new/service" element={<ServiceLocations />} />
+          <Route path="/businesses/new/service/add" element={<AddServiceLocation />} />
           <Route path="/users" element={<UsersAndRoles />} />
           <Route path="/users/:id" element={<UserDetails />} />
 

@@ -42,6 +42,7 @@ function validate(v: Values) {
   else if (!/^\d{10}$/.test(npi)) fail('npi', 'NPI must have 10 digits.')
 
   if (!String(v.address1 ?? '').trim()) fail('address1', 'Enter the street address.')
+
   if (!String(v.city ?? '').trim()) fail('city', 'Enter the city.')
   if (!optionValue(v.addressState)) fail('addressState', 'Select the state.')
   const zip = String(v.zip ?? '').trim()
