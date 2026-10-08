@@ -64,7 +64,7 @@ export function ReviewSubmit() {
       </div>
 
       <div className="nb__submit">
-        <Button type="button" variant="filled" size="medium" style={{ width: '100%' }} onClick={() => navigate('/businesses')}>
+        <Button type="button" variant="filled" size="medium" style={{ width: '100%' }} onClick={() => navigate('/businesses/new/submitted')}>
           Confirm &amp; Submit Enrollment
         </Button>
       </div>

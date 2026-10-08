@@ -1,6 +1,7 @@
 /** My Businesses — Figma "Member Verification" (8169:133819). Sample data. */
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { PortalNav } from './PortalNav'
 import { AddBusinessButton, PageHeader } from './PageHeader'
 import './MyBusinesses.css'
@@ -114,7 +115,19 @@ export function pageList(page: number, pages: number): (number | '…')[] {
   return [1, ...(start > 2 ? ['…' as const] : []), ...mid, ...(start + 2 < pages - 1 ? ['…' as const] : []), pages]
 }
 
+const submittedBusinesses = (): Business[] => {
+  try { return JSON.parse(sessionStorage.getItem('submittedBusinesses') ?? '[]') } catch { return [] }
+}
+
 export function MyBusinesses() {
+  const location = useLocation()
+  const [banner, setBanner] = useState((location.state as { submitted?: boolean } | null)?.submitted ?? false)
+  useEffect(() => {
+    if (!banner) return
+    const t = window.setTimeout(() => setBanner(false), 3000)
+    return () => window.clearTimeout(t)
+  }, [banner])
+  const all = useMemo(() => [...submittedBusinesses(), ...ALL], [])
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState('')
   const [rowsPerPage, setRowsPerPage] = useState(fitRows)
@@ -131,12 +144,12 @@ export function MyBusinesses() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return ALL.filter(
+    return all.filter(
       (b) =>
         (!status || b.status === status) &&
         (!q || [b.legal, b.dba, b.tin, b.npi].some((v) => v.toLowerCase().includes(q))),
     )
-  }, [query, status])
+  }, [all, query, status])
 
   const pages = Math.max(1, Math.ceil(filtered.length / rowsPerPage))
   const current = Math.min(page, pages)
@@ -166,6 +179,13 @@ export function MyBusinesses() {
                 Clear All
               </button>
             </div>
+
+            {banner && (
+              <div className="biz__banner" role="status">
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="#1f8a4c" /><path d="M4.5 8.3l2.3 2.3 4.7-4.7" fill="none" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                Business submitted successfully
+              </div>
+            )}
 
             <div className="biz__scroll">
             <table className="biz__table">

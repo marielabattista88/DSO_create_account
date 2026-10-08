@@ -23,10 +23,12 @@ interface Props {
   description?: ReactNode
   /** Shows a back arrow before the title. */
   onBack?: () => void
+  /** Hides the step rail and title (used by the final confirmation screen). */
+  plain?: boolean
   children: ReactNode
 }
 
-export function NewBusinessLayout({ active, title, description, onBack, children }: Props) {
+export function NewBusinessLayout({ active, title, description, onBack, plain, children }: Props) {
   const navigate = useNavigate()
   const flat = NB_STEPS.flatMap((s) => s.items)
   const activeIndex = flat.indexOf(active)
@@ -48,7 +50,7 @@ export function NewBusinessLayout({ active, title, description, onBack, children
       </header>
 
       <div className="nb__body">
-        <nav className="nb__rail" aria-label="Progress">
+        {!plain && <nav className="nb__rail" aria-label="Progress">
           <ol>
             {NB_STEPS.map((group) => {
               const groupStart = flat.indexOf(group.items[0])
@@ -77,9 +79,10 @@ export function NewBusinessLayout({ active, title, description, onBack, children
               )
             })}
           </ol>
-        </nav>
+        </nav>}
 
         <main className="nb__content">
+          {plain ? children : <>
           <h2 className="nb__title">
             {onBack && (
               <button type="button" className="nb__back" aria-label="Back" onClick={onBack}>
@@ -90,6 +93,7 @@ export function NewBusinessLayout({ active, title, description, onBack, children
           </h2>
           {description && <p className="nb__desc">{description}</p>}
           {children}
+          </>}
         </main>
       </div>
     </div>

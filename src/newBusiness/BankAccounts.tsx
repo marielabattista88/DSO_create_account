@@ -46,7 +46,7 @@ export function BankAccounts() {
 
       <div className="nb__bank-actions">
         <Button type="button" variant="filled" size="medium" disabled style={{ width: '100%' }}>Continue</Button>
-        <button type="button" className="nb__link-btn" onClick={() => navigate('/businesses/new/review')}>Complete After Approval</button>
+        <button type="button" className="nb__link-btn" onClick={() => navigate('/businesses/new/submitted')}>Complete After Approval</button>
       </div>
     </NewBusinessLayout>
   )
