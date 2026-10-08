@@ -123,29 +123,16 @@ export function OrganizationInfo() {
       <CustomFormProvider {...methods}>
         <form onSubmit={onSubmit} noValidate>
           <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="min-w-0">
-                <FieldInput name="legalName" label="Legal Entity Name" required placeholder="e.g. Dunder Mifflin, Inc" />
-              </div>
-              <div className="min-w-0">
-                <FieldInput name="dba" label="Doing Business As (DBA)" required />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:items-end">
-              <div className="min-w-0">
-                {/* Keyed on the label so the field remounts when the mask changes —
-                    otherwise digits typed as an EIN linger in the ITIN field. */}
-                <FieldMaskInput
-                  key={taxIdLabel}
-                  name="tin"
-                  label={taxIdLabel}
-                  required
-                  mask={sole ? ITIN_MASK : EIN_MASK}
-                  placeholder={sole ? '555-55-5555' : '55-55555555'}
-                />
-              </div>
-            </div>
+            <FieldInput name="legalName" label="Legal Entity Name" required placeholder="e.g Dunder Mifflin, Inc" />
+            <FieldInput name="dba" label="Doing Business As (DBA)" required />
+            <FieldMaskInput
+              key={taxIdLabel}
+              name="tin"
+              label={taxIdLabel}
+              required
+              mask={sole ? ITIN_MASK : EIN_MASK}
+              placeholder={sole ? '555-55-5555' : '55-55555555'}
+            />
 
             <FieldInput name="address1" label="Registered address Line 1" required placeholder="e.g 1725 Slough Avenue" />
             <FieldInput name="address2" label="Registered address Line 2" placeholder="e.g. Suite 1450" />
@@ -155,7 +142,7 @@ export function OrganizationInfo() {
                 <FieldInput name="city" label="City" required placeholder="Miami" />
               </div>
               <div className="min-w-0">
-                <FieldSelect name="addressState" label="State" required showIcon={false} options={US_STATES} />
+                <FieldSelect name="addressState" label="State*" required showIcon={false} options={US_STATES} />
               </div>
               <div className="min-w-0">
                 <FieldInput name="zip" label="ZIP Code" required placeholder="33131" maxLength={5} />

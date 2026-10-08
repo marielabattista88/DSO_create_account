@@ -23,6 +23,10 @@ interface AuthLayoutProps {
   showLogoInCard?: boolean
   /** Content above the title, e.g. a status icon. */
   aboveTitle?: ReactNode
+  /** Control aligned to the right of the title, e.g. a toggle. */
+  titleAside?: ReactNode
+  /** Content directly under the title, before the description. */
+  belowTitle?: ReactNode
   /** Show the nav's "Sign Out" button (steps 4+ have an authenticated user). */
   signedIn?: boolean
   onSignOut?: () => void
@@ -38,6 +42,8 @@ export function AuthLayout({
   align = 'left',
   showLogoInCard = false,
   aboveTitle,
+  titleAside,
+  belowTitle,
   signedIn = false,
   onSignOut,
   contentGap = 24,
@@ -100,9 +106,17 @@ export function AuthLayout({
               </div>
             ) : null}
 
-            <h1 className="heading-1" style={{ color: 'var(--nb-woodsmoke)', margin: 0, textAlign: align }}>
-              {title}
-            </h1>
+            <div className="flex items-center justify-between gap-4">
+              <h1 className="heading-1" style={{ color: 'var(--nb-woodsmoke)', margin: 0, textAlign: align }}>
+                {title}
+              </h1>
+            </div>
+
+            {belowTitle ? (
+              <div className="flex" style={{ justifyContent: align === 'center' ? 'center' : 'flex-start', marginTop: 12 }}>
+                {belowTitle}
+              </div>
+            ) : null}
 
             {description ? (
               <p
