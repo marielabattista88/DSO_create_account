@@ -13,10 +13,18 @@
     "@emotion/styled": "11.14.1",
     "@mui/icons-material": "7.3.9",
     "@mui/material": "7.3.9",
+    "@mui/x-date-pickers": "7.29.4",
+    "@mui/x-date-pickers-pro": "7.29.4",
+    "axios": "1.18.0",
+    "dayjs": "1.11.20",
     "nb-flexpay-icons": "0.0.21",
     "nb-flexpay-ui": "^2.4.27",
     "react": "19.2.5",
-    "react-dom": "19.2.5"
+    "react-data-table-component": "7.7.1",
+    "react-dom": "19.2.5",
+    "react-router-dom": "6.30.4",
+    "styled-components": "6.4.4",
+    "yup": "1.7.1"
   },
   "devDependencies": {
     "@types/node": "22.19.17",
