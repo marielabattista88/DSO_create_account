@@ -16,6 +16,7 @@ import { ServiceLocations } from './newBusiness/ServiceLocations'
 import { AddServiceLocation } from './newBusiness/AddServiceLocation'
 import { Providers } from './newBusiness/Providers'
 import { AddProvider } from './newBusiness/AddProvider'
+import { BankAccounts } from './newBusiness/BankAccounts'
 import { UserDetails } from './portal/UserDetails'
 import { AccountReady } from './enrollment/steps/AccountReady'
 
@@ -42,6 +43,7 @@ export default function App() {
           <Route path="/businesses/new/service/add" element={<AddServiceLocation />} />
           <Route path="/businesses/new/providers" element={<Providers />} />
           <Route path="/businesses/new/providers/add" element={<AddProvider />} />
+          <Route path="/businesses/new/bank" element={<BankAccounts />} />
           <Route path="/users" element={<UsersAndRoles />} />
           <Route path="/users/:id" element={<UserDetails />} />
 

@@ -20,7 +20,7 @@ interface Props {
   /** Active sub-step label, e.g. "Business Information". */
   active: string
   title: string
-  description?: string
+  description?: ReactNode
   /** Shows a back arrow before the title. */
   onBack?: () => void
   children: ReactNode
