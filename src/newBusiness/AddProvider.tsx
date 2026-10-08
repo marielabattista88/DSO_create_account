@@ -1,21 +1,19 @@
 /** New Business — Add Provider form + "Select Service Locations" modal (Figma 8229:131348 / 8229:131441). */
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Button, CustomFormProvider, FieldInput, FieldMaskInput, FieldSelect, useForm } from 'nb-flexpay-ui'
+import { Button, CustomFormProvider, FieldInput, FieldMaskInput, useForm } from 'nb-flexpay-ui'
 import { NewBusinessLayout } from './NewBusinessLayout'
 import { loadProviders, saveProviders } from './providerStore'
 import { loadLocations } from './serviceStore'
 import { NO_FIELD_ERRORS } from '../email-policy'
 
 const opts = (list: string[]) => list.map((v) => ({ value: v, label: v }))
-const CREDENTIALS = opts(['DDS', 'DMD', 'RDH', 'MD', 'DO'])
 const SPECIALTIES = opts(['General Dentistry', 'Orthodontics', 'Pediatric Dentistry', 'Periodontics', 'Endodontics', 'Oral Surgery'])
 const NPI_MASK = Array(10).fill(/\d/)
 
 type Values = Record<string, unknown>
 const text = (v: unknown) => String(v ?? '').trim()
-const optionValue = (o: unknown) => (o as { value?: string } | null)?.value ?? ''
 
 interface Loc { id: string; name: string; address: string; business: string }
 
@@ -39,13 +37,24 @@ function useAvailableLocations(): Loc[] {
 
 function validate(v: Values) {
   const errors: Record<string, { type: string; message: string }> = {}
-  const fail = (n: string, m: string) => { errors[n] = { type: 'validate', message: m } }
-  if (!text(v.firstName)) fail('firstName', 'Enter the first name.')
-  if (!text(v.lastName)) fail('lastName', 'Enter the last name.')
-  if (!/^\d{10}$/.test(text(v.npi).replace(/\D/g, ''))) fail('npi', 'Enter a valid 10-digit NPI.')
-  if (!optionValue(v.credentials)) fail('credentials', 'Select the credentials.')
-  if (!optionValue(v.specialty)) fail('specialty', 'Select the specialty.')
+  if (!/^\d{10}$/.test(text(v.npi).replace(/\D/g, ''))) errors.npi = { type: 'validate', message: 'Enter a valid 10-digit NPI.' }
   return errors
+}
+
+interface Registry { firstName: string; lastName: string; credentials: string; specialty: string }
+const REG_FIRST = ['Christian', 'Maria', 'Daniel', 'Laura', 'Andrew', 'Sofia', 'Marcus']
+const REG_LAST = ['Sais', 'Lopez', 'Moore', 'Reyes', 'Bennett', 'Nguyen', 'Carter']
+const REG_CRED = ['DDS', 'DMD', 'DDS', 'DMD', 'RDH', 'DDS', 'DMD']
+
+// Prototype stand-in for an NPI registry lookup: the same NPI always returns the same provider.
+function lookupNpi(npi: string): Registry {
+  const n = Number(npi.slice(-4))
+  return {
+    firstName: REG_FIRST[n % REG_FIRST.length],
+    lastName: REG_LAST[(n >> 2) % REG_LAST.length],
+    credentials: REG_CRED[n % REG_CRED.length],
+    specialty: SPECIALTIES[n % SPECIALTIES.length].value,
+  }
 }
 
 function LocationsModal({ all, initial, onClose, onAdd }: {
@@ -129,14 +138,13 @@ export function AddProvider() {
   const [assigned, setAssigned] = useState<string[]>(existing?.locations ?? [])
   const [picking, setPicking] = useState(false)
   const [locError, setLocError] = useState(false)
+  const [found, setFound] = useState<Registry | null>(
+    existing ? { firstName: existing.firstName, lastName: existing.lastName, credentials: existing.credentials, specialty: existing.specialty } : null,
+  )
 
   const methods = useForm<Values>({
     defaultValues: {
-      firstName: existing?.firstName ?? '',
-      lastName: existing?.lastName ?? '',
       npi: existing?.npi ?? '',
-      credentials: CREDENTIALS.find((c) => c.value === existing?.credentials) ?? null,
-      specialty: SPECIALTIES.find((c) => c.value === existing?.specialty) ?? null,
     },
     mode: 'onBlur',
     resolver: (values) => {
@@ -146,15 +154,23 @@ export function AddProvider() {
     },
   })
 
+  const npi = text(methods.watch('npi')).replace(/\D/g, '')
+  useEffect(() => {
+    const r = npi.length === 10 ? lookupNpi(npi) : null
+    setFound(r)
+    methods.setValue('firstName', r?.firstName ?? '')
+    methods.setValue('lastName', r?.lastName ?? '')
+    methods.setValue('credentials', r?.credentials ?? '')
+    methods.setValue('specialty', r?.specialty ?? '')
+  }, [npi, methods])
+
   const onSubmit = methods.handleSubmit((v) => {
+    if (!found) return
     if (assigned.length === 0) { setLocError(true); return }
     const list = loadProviders()
     const item = {
-      firstName: text(v.firstName),
-      lastName: text(v.lastName),
+      ...found,
       npi: text(v.npi).replace(/\D/g, ''),
-      credentials: optionValue(v.credentials),
-      specialty: optionValue(v.specialty),
       locations: assigned,
     }
     if (editing !== null && list[Number(editing)]) list[Number(editing)] = item
@@ -174,13 +190,19 @@ export function AddProvider() {
     <NewBusinessLayout active="Providers Information" title="Provider Information" onBack={() => navigate('/businesses/new/providers')}>
       <CustomFormProvider {...methods}>
         <form onSubmit={onSubmit} noValidate className="nb__sections">
+          {found && (
+            <div className="nb__notice" role="note">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden="true"><circle cx="7" cy="7" r="6" /><path d="M7 6.2V10M7 4v.1" strokeLinecap="round" /></svg>
+              <span><strong>Think this is a mistake?</strong>Contact support at 1-844-313-2081 or dentalproviders@nationsbenefits.com.</span>
+            </div>
+          )}
           <section style={{ borderBottom: 0, paddingBottom: 0 }}>
             <div className="nb__stack">
-              <FieldInput name="firstName" label="First Name" required placeholder="Christian Sais" />
-              <FieldInput name="lastName" label="Last Name" required placeholder="Christian Sais" />
               <FieldMaskInput name="npi" label="NPI" required mask={NPI_MASK} guide={false} placeholder="627395405" />
-              <FieldSelect name="credentials" label="Credentials*" required showIcon={false} options={CREDENTIALS} placeholder="Select" />
-              <FieldSelect name="specialty" label="Speciality*" required showIcon={false} options={SPECIALTIES} placeholder="Select" />
+              <FieldInput key={`f-${found?.firstName ?? ''}`} name="firstName" label="First Name" required disabled />
+              <FieldInput key={`l-${found?.lastName ?? ''}`} name="lastName" label="Last Name" required disabled />
+              <FieldInput key={`c-${found?.credentials ?? ''}`} name="credentials" label="Credentials" disabled placeholder="Select" />
+              <FieldInput key={`s-${found?.specialty ?? ''}`} name="specialty" label="Speciality" required disabled placeholder="Select" />
             </div>
           </section>
 

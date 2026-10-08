@@ -159,3 +159,8 @@
 .nb__locs small { display: block; margin-top: 2px; font-size: 10px; line-height: 14px; }
 .nb__locs--static { max-height: none; padding-right: 0; }
 .nb__assigned { min-height: 69px; padding: 0 16px; }
+
+.nb__notice { display: flex; gap: 8px; margin-top: 16px; padding: 8px 12px; border-radius: 8px; background: #f3f4f5; font-size: 11px; line-height: 16px; color: #52606d; }
+.nb__notice svg { flex-shrink: 0; margin-top: 2px; }
+.nb__notice strong { display: block; color: #222b2f; font-weight: 600; }
+.nb__stack div:has(> input[disabled]) > button { display: none; }
