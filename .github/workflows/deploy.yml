@@ -2,57 +2,42 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches:
+      - main
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
+  contents: write
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: npm
-
-      # nb-flexpay-ui lives in a private Azure Artifacts feed; AZURE_NPM_PAT is a PAT with Packaging > Read.
-      - name: Configure private registry auth
-        env:
-          AZURE_NPM_PAT: ${{ secrets.AZURE_NPM_PAT }}
+          node-version: '22'
+          cache: 'npm'
+      
+      - name: Authenticate with Azure Artifacts
         run: |
-          B64=$(printf '%s' "$AZURE_NPM_PAT" | base64 -w0)
-          echo "::add-mask::$B64"
-          REG=//pkgs.dev.azure.com/NationsBenefits2/_packaging/NationsBenefits/npm/registry/
-          {
-            echo "${REG}:username=NationsBenefits2"
-            echo "${REG}:_password=$B64"
-            echo "${REG}:email=npm@example.com"
-            echo "always-auth=true"
-          } >> ~/.npmrc
+          echo "//pkgs.dev.azure.com/NationsBenefits2/_packaging/NationsBenefits/npm/registry/:username=NationsBenefits2" >> ~/.npmrc
+          echo "//pkgs.dev.azure.com/NationsBenefits2/_packaging/NationsBenefits/npm/registry/:_password=$(echo -n '${{ secrets.AZURE_ARTIFACTS_TOKEN }}')" >> ~/.npmrc
+          echo "//pkgs.dev.azure.com/NationsBenefits2/_packaging/NationsBenefits/npm/registry/:email=$(echo -n '${{ secrets.AZURE_ARTIFACTS_USER }}')" >> ~/.npmrc
+          echo "//pkgs.dev.azure.com/NationsBenefits2/_packaging/NationsBenefits/npm/:username=NationsBenefits2" >> ~/.npmrc
+          echo "//pkgs.dev.azure.com/NationsBenefits2/_packaging/NationsBenefits/npm/:_password=$(echo -n '${{ secrets.AZURE_ARTIFACTS_TOKEN }}')" >> ~/.npmrc
+          echo "//pkgs.dev.azure.com/NationsBenefits2/_packaging/NationsBenefits/npm/:email=$(echo -n '${{ secrets.AZURE_ARTIFACTS_USER }}')" >> ~/.npmrc
 
-      - run: npm ci
-      - run: npm run build
-
-      - uses: actions/upload-pages-artifact@v3
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build
+        run: npx vite build
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
