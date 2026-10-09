@@ -95,9 +95,7 @@ export function InvitationEmail() {
               <p>
                 Once you have registered, NationsDental will continue to send training materials as
                 we get closer to going live on January 1. For your security, please use the{' '}
-                <a className="email__link" href="#/create-account/email">
-                  NationsDental Portal
-                </a>{' '}
+                <span className="email__link">NationsDental Portal</span>{' '}
                 to verify your practice info. We will never ask for your banking or other sensitive
                 information via email or phone.
               </p>
